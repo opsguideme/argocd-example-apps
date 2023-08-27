@@ -1,7 +1,23 @@
-namePrefix: kustomize-
-
-resources:
-- guestbook-ui-deployment.yaml
-- guestbook-ui-svc.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+resources:
+- ./base/guestbook-ui-deployment.yaml
+- ./base/guestbook-ui-svc.yaml
+- ./base/namespace.yaml
+namespace: newguestbook
+namePrefix: this-
+nameSuffix: -kustomized
+replicas:
+- count: 2
+  name: guestbook-ui
+commonAnnotations:
+  application: argocd
+labels:
+- includeSelectors: true
+  pairs:
+    tool: kustomize
+patches:
+- target:
+    kind: Service
+    name: guestbook-ui
+  path: service.yaml
