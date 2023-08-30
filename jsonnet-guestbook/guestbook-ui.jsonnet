@@ -1,5 +1,10 @@
 local params = import 'params.libsonnet';
 
+function (
+    nodePort=30080,
+    portType=portType
+)
+
 [
    {
       "apiVersion": "v1",
@@ -11,13 +16,14 @@ local params = import 'params.libsonnet';
          "ports": [
             {
                "port": params.servicePort,
-               "targetPort": params.containerPort
+               "targetPort": params.containerPort,
+               "nodePort": nodePort
             }
          ],
          "selector": {
             "app": params.name
          },
-         "type": params.type
+         "type": portType
       }
    },
    {

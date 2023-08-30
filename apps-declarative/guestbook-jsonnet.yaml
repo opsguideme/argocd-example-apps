@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/opsguideme/argocd-example-apps.git
+    targetRevision: HEAD
+    path: jsonnet-guestbook
+    directory:
+      jsonnet:
+        extVars:
+        - name: app
+          value: $ARGOCD_APP_NAME
+        tlas:
+        - name: portType
+          value: "NodePort"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guestbook
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+
+
